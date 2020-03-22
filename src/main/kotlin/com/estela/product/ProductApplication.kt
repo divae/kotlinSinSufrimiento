@@ -14,7 +14,7 @@ fun main(args: Array<String>) {
 }
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("")
 class helloController{
 
 	@GetMapping
