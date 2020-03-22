@@ -1,9 +1,10 @@
 # Proyecto de aprendizade "Kotlin backend sin sufrimiento"
 ¡Hola Navegante, Bienvenido!
-Éste proyecto ha surgido tras la curiosidad de ver cómo otros profesionales enseñan el uso de Kotlin y SpringBoot, 
-la idea es ir registrando los pasos que voy dando para crear un api siguiendo el tutorial de Udemi referenciado en el 
+
+Éste proyecto ha surgido tras la curiosidad de ver cómo otros profesionales enseñan el uso de Kotlin y SpringBoot. La idea es ir registrando los pasos que voy dando para crear un api siguiendo el tutorial de Udemi referenciado en el 
 apartado "Wiki".
-En éste caso se va a cambiar la tecnología [Maven](https://maven.apache.org/) por Gradle porque es la que quiero probar.
+
+_En éste caso se va a cambiar la tecnología [Maven](https://maven.apache.org/) por Gradle porque es la que quiero probar._
 
 ### Pre-requisitos 📋
 - Java Runtime environment [JRE](https://www.java.com/es/download/)
