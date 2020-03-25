@@ -13,16 +13,25 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.MockMvcBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import org.springframework.web.context.WebApplicationContext
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
-@AutoConfigureMockMvc
 class ProductApplicationTests {
 
 	@Autowired
-	private lateinit var mockMvc: MockMvc
+	private lateinit var webApplicationContext: WebApplicationContext
+
+	private val mockMvc: MockMvc by lazy {
+		MockMvcBuilders.webAppContextSetup(webApplicationContext)
+				.alwaysDo<DefaultMockMvcBuilder>(MockMvcResultHandlers.print()).build()
+	}
 
 	@Autowired
 	private lateinit var mapper: ObjectMapper
