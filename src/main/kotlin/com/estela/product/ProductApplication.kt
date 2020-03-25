@@ -29,6 +29,9 @@ class productController(
 	@PutMapping
 	fun update(@RequestBody product: Product) = productService.update(product)
 
+	@DeleteMapping("/{productId}")
+	fun deleteById(@PathVariable productId: String) = productService.deleteById(productId)
+
 }
 
 interface BasicCrud<T,ID>{
