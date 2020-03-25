@@ -2,6 +2,7 @@ package com.estela.product.service
 
 import com.estela.product.domain.Product
 import org.springframework.stereotype.Service
+import utils.update
 
 @Service
 class ProductService: BasicCrud<Product, String> {
@@ -13,7 +14,7 @@ class ProductService: BasicCrud<Product, String> {
 
 	override fun save(product: Product) = this.products.add(product)
 
-	override fun update(product: Product) = this.products.remove(this.findById(product.name)) && this.products.add(product)
+	override fun update(product: Product) = this.products.update(product)
 
 	override fun deleteById(productName: String) = this.products.remove(this.findById(productName))
 }
