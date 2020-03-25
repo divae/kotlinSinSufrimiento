@@ -16,10 +16,12 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.MockMvcBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
+import java.util.*
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
@@ -39,23 +41,33 @@ class ProductApplicationTests {
 	@Autowired
 	private lateinit var productService: ProductService
 
+	private val URL = "/api/v1/product/"
+
 	@Test
 	fun `Get() - returns the list of products if was successful`() {
 		val productsFromService = productService.findAll()
-		val json = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/product"))
+		val products:List<Product> = mockMvc.perform(MockMvcRequestBuilders.get(URL))
 				.andExpect(status().isOk)
-				.andReturn().response.contentAsString
-
-		val products:List<Product> = mapper.readValue(json)
+				.bodyTo(mapper)
 
 		assertThat(productsFromService, Matchers.`is`(Matchers.equalTo(products)))
 	}
 
 	@Test
-	fun `Get() - if not exist returns not found`() {
-		mockMvc.perform(MockMvcRequestBuilders.get("/"))
-				.andExpect(status().isNotFound)
-				.andReturn().response.contentAsString
+	fun `findById() - returns product by id`(){
+		val productsFromService = productService.findAll()
+		assert(!productsFromService.isEmpty()){"Should not be empty"}
+		val product = productsFromService.first()
+
+		mockMvc.perform(MockMvcRequestBuilders.get("${URL}${product.name}"))
+				.andExpect(status().isOk)
+				.andExpect(jsonPath("$.name", Matchers.`is`(product.name)))
 	}
 
+	@Test
+	fun `findById() - returns not exist if have error`(){
+		mockMvc.perform(MockMvcRequestBuilders.get("${UUID.randomUUID()}"))
+				.andExpect(status().isNotFound)
+				.andExpect(jsonPath("$").doesNotExist())
+	}
 }

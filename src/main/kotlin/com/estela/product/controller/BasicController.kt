@@ -9,7 +9,7 @@ abstract class BasicController<T,ID>(
     @GetMapping
     fun findAll() = basicCrud.findAll()
 
-    @GetMapping("/{productId}")
+    @GetMapping("/{id}")
     fun findById(@PathVariable id: ID) = basicCrud.findById(id)
 
     @PostMapping
@@ -18,6 +18,6 @@ abstract class BasicController<T,ID>(
     @PutMapping
     fun update(@RequestBody t: T) = basicCrud.update(t)
 
-    @DeleteMapping("/{productId}")
+    @DeleteMapping("/{id}")
     fun deleteById(@PathVariable id: ID) = basicCrud.deleteById(id)
 }
