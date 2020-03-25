@@ -23,6 +23,14 @@ class productController(
 	fun findAll() = productService.findAll()
 }
 
+interface BasicCrud<T,ID>{
+	fun finAll():List<T>
+	fun findById(id: ID): T?
+	fun save(t:T): Boolean
+	fun update(t:T): Boolean
+	fun deleteById(id:ID): Boolean
+}
+
 @Service
 class ProductService{
 	private val products:Set<Product> = setOf(Product("Apple", 22.2), Product("Banana", 22.3))
