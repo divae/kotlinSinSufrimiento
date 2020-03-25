@@ -25,6 +25,10 @@ class productController(
 
 	@PostMapping
 	fun save(@RequestBody product: Product) = productService.save(product)
+
+	@PutMapping
+	fun update(@RequestBody product: Product) = productService.update(product)
+
 }
 
 interface BasicCrud<T,ID>{
