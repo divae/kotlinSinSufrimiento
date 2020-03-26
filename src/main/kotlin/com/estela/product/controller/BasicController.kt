@@ -17,11 +17,20 @@ abstract class BasicController<T,ID>(
     }
 
     @PostMapping
-    fun save(@RequestBody t: T) = basicCrud.save(t)
+    fun save(@RequestBody t: T): ResponseEntity<Boolean> {
+        val entity = basicCrud.save(t)
+        return ResponseEntity.status(if(entity) HttpStatus.CREATED else HttpStatus.CONFLICT).body(entity)
+    }
 
     @PutMapping
-    fun update(@RequestBody t: T) = basicCrud.update(t)
+    fun update(@RequestBody t: T): ResponseEntity<Boolean> {
+        val entity = basicCrud.update(t)
+        return ResponseEntity.status(if(entity) HttpStatus.CREATED else HttpStatus.CONFLICT).body(entity)
+    }
 
     @DeleteMapping("/{id}")
-    fun deleteById(@PathVariable id: ID) = basicCrud.deleteById(id)
+    fun deleteById(@PathVariable id: ID): ResponseEntity<Boolean> {
+       val entity = basicCrud.deleteById(id)
+        return ResponseEntity.status(if(entity) HttpStatus.OK else HttpStatus.NO_CONTENT).body(entity)
+    }
 }

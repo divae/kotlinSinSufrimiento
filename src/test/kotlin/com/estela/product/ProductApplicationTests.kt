@@ -73,7 +73,7 @@ class ProductApplicationTests {
 				MockMvcRequestBuilders
 						.post(URL)
 						.body(data = product, mapper = mapper))
-				.andExpect(status().isOk)
+				.andExpect(status().isCreated)
 				.bodyTo(mapper)
 
 		assert(result)
@@ -89,7 +89,7 @@ class ProductApplicationTests {
 				MockMvcRequestBuilders
 						.post(URL)
 						.body(data = product, mapper = mapper))
-				.andExpect(status().isOk)
+				.andExpect(status().isConflict)
 				.bodyTo(mapper)
 
 		assert(!result){"Should be false"}
@@ -105,7 +105,7 @@ class ProductApplicationTests {
 				MockMvcRequestBuilders
 						.put(URL)
 						.body(data = product, mapper = mapper))
-				.andExpect(status().isOk)
+				.andExpect(status().isCreated)
 				.bodyTo(mapper)
 
 		assert(result)
@@ -119,7 +119,7 @@ class ProductApplicationTests {
 				MockMvcRequestBuilders
 						.put(URL)
 						.body(data = product, mapper = mapper))
-				.andExpect(status().isOk)
+				.andExpect(status().isConflict)
 				.bodyTo(mapper)
 
 		assert(!result){"Should be false"}
@@ -147,7 +147,7 @@ class ProductApplicationTests {
 		val result: Boolean = mockMvc.perform(
 				MockMvcRequestBuilders
 						.delete("$URL/${UUID.randomUUID()}"))
-				.andExpect(status().isOk)
+				.andExpect(status().isNoContent)
 				.bodyTo(mapper)
 
 		assert(!result){"Should be false"}
