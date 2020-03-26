@@ -128,4 +128,32 @@ class ProductApplicationTests {
 
 		assert(!result){"Should be false"}
 	}
+
+	@Test
+	fun deleteById(){
+		val productsFromService = productService.findAll()
+		assert(!productsFromService.isEmpty()){"Should not be empty"}
+		val product = productsFromService.last()
+
+		val result: Boolean = mockMvc.perform(
+				MockMvcRequestBuilders
+						.delete("$URL/${product.name}"))
+				.andExpect(status().isOk)
+				.bodyTo(mapper)
+
+		assert(result)
+
+		assert(!productService.findAll().contains(product))
+	}
+
+	@Test
+	fun deleteByIdFail(){
+		val result: Boolean = mockMvc.perform(
+				MockMvcRequestBuilders
+						.delete("$URL/${UUID.randomUUID()}"))
+				.andExpect(status().isOk)
+				.bodyTo(mapper)
+
+		assert(!result){"Should be false"}
+	}
 }
