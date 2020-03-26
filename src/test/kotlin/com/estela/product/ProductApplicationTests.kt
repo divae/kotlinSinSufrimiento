@@ -9,11 +9,10 @@ import org.hamcrest.Matchers
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.MediaType
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.MockMvcBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
@@ -41,10 +40,10 @@ class ProductApplicationTests {
 	@Autowired
 	private lateinit var productService: ProductService
 
-	private val URL = "/api/v1/product/"
+	private val URL = "/api/v1/product"
 
 	@Test
-	fun `Get() - returns the list of products if was successful`() {
+	fun findByIdEmpy() {
 		val productsFromService = productService.findAll()
 		val products:List<Product> = mockMvc.perform(MockMvcRequestBuilders.get(URL))
 				.andExpect(status().isOk)
@@ -54,20 +53,34 @@ class ProductApplicationTests {
 	}
 
 	@Test
-	fun `findById() - returns product by id`(){
+	fun findAll(){
 		val productsFromService = productService.findAll()
 		assert(!productsFromService.isEmpty()){"Should not be empty"}
 		val product = productsFromService.first()
 
-		mockMvc.perform(MockMvcRequestBuilders.get("${URL}${product.name}"))
+		mockMvc.perform(MockMvcRequestBuilders.get("$URL/${product.name}"))
 				.andExpect(status().isOk)
 				.andExpect(jsonPath("$.name", Matchers.`is`(product.name)))
 	}
 
 	@Test
-	fun `findById() - returns not exist if have error`(){
+	fun endPointNotExist(){
 		mockMvc.perform(MockMvcRequestBuilders.get("${UUID.randomUUID()}"))
 				.andExpect(status().isNotFound)
 				.andExpect(jsonPath("$").doesNotExist())
+	}
+
+	@Test
+	fun saveSucessfully(){
+		val product = Product(name = "PineApple", price = 22.2)
+
+		val result: Boolean =  mockMvc.perform(
+									MockMvcRequestBuilders.post(URL)
+									.content(mapper.writeValueAsBytes(product))
+									.contentType(MediaType.APPLICATION_JSON_UTF8))
+									.andExpect(status().isOk)
+									.bodyTo(mapper)
+
+		assert(result)
 	}
 }
