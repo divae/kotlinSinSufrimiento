@@ -1,6 +1,7 @@
 package com.estela.product.controller
-
 import com.estela.product.service.BasicCrud
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 abstract class BasicController<T,ID>(
@@ -10,7 +11,10 @@ abstract class BasicController<T,ID>(
     fun findAll() = basicCrud.findAll()
 
     @GetMapping("/{id}")
-    fun findById(@PathVariable id: ID) = basicCrud.findById(id)
+    fun findById(@PathVariable id: ID): ResponseEntity<T> {
+        val entity = basicCrud.findById(id)
+        return ResponseEntity.status(if(entity!=null) HttpStatus.OK else HttpStatus.NO_CONTENT).body(entity)
+    }
 
     @PostMapping
     fun save(@RequestBody t: T) = basicCrud.save(t)

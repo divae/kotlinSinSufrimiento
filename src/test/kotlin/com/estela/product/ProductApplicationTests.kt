@@ -9,7 +9,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -43,12 +42,9 @@ class ProductApplicationTests {
 
 	@Test
 	fun findByIdEmpy() {
-		val productsFromService = productService.findAll()
-		val products:List<Product> = mockMvc.perform(MockMvcRequestBuilders.get(URL))
-				.andExpect(status().isOk)
-				.bodyTo(mapper)
-
-		assertThat(productsFromService, Matchers.`is`(Matchers.equalTo(products)))
+		mockMvc.perform(MockMvcRequestBuilders.get("$URL/${UUID.randomUUID()}"))
+				.andExpect(status().isNoContent)
+				.andExpect(jsonPath("$").doesNotExist())
 	}
 
 	@Test
