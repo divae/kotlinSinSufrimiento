@@ -87,12 +87,41 @@ class ProductApplicationTests {
 	fun saveFail1(){
 		val productsFromService = productService.findAll()
 		assert(!productsFromService.isEmpty()){"Should not be empty"}
-
 		val product = Product(name = "PineApple", price = 22.2)
 
 		val result: Boolean =  mockMvc.perform(
 				MockMvcRequestBuilders
 						.post(URL)
+						.body(data = product, mapper = mapper))
+				.andExpect(status().isOk)
+				.bodyTo(mapper)
+
+		assert(!result){"Should be false"}
+	}
+
+	@Test
+	fun updateSuccessfull(){
+		val productsFromService = productService.findAll()
+		assert(!productsFromService.isEmpty()){"Should not be empty"}
+		val product = productsFromService.first().copy(price = 33.2)
+
+		val result: Boolean = mockMvc.perform(
+				MockMvcRequestBuilders
+						.put(URL)
+						.body(data = product, mapper = mapper))
+				.andExpect(status().isOk)
+				.bodyTo(mapper)
+
+		assert(result)
+	}
+
+	@Test
+	fun updateFail(){
+		val product = Product(name = UUID.randomUUID().toString(), price = 233.44)
+
+		val result: Boolean = mockMvc.perform(
+				MockMvcRequestBuilders
+						.put(URL)
 						.body(data = product, mapper = mapper))
 				.andExpect(status().isOk)
 				.bodyTo(mapper)
