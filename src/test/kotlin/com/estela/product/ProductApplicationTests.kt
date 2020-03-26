@@ -3,7 +3,6 @@ package com.estela.product
 import com.estela.product.domain.Product
 import com.estela.product.service.ProductService
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.Test
@@ -71,16 +70,33 @@ class ProductApplicationTests {
 	}
 
 	@Test
-	fun saveSucessfully(){
+	fun saveSucessfully() {
+		val product = Product(name = "PineApple", price = 22.2)
+
+		val result: Boolean = mockMvc.perform(
+				MockMvcRequestBuilders
+						.post(URL)
+						.body(data = product, mapper = mapper))
+				.andExpect(status().isOk)
+				.bodyTo(mapper)
+
+		assert(result)
+	}
+
+	@Test
+	fun saveFail1(){
+		val productsFromService = productService.findAll()
+		assert(!productsFromService.isEmpty()){"Should not be empty"}
+
 		val product = Product(name = "PineApple", price = 22.2)
 
 		val result: Boolean =  mockMvc.perform(
-									MockMvcRequestBuilders.post(URL)
-									.content(mapper.writeValueAsBytes(product))
-									.contentType(MediaType.APPLICATION_JSON_UTF8))
-									.andExpect(status().isOk)
-									.bodyTo(mapper)
+				MockMvcRequestBuilders
+						.post(URL)
+						.body(data = product, mapper = mapper))
+				.andExpect(status().isOk)
+				.bodyTo(mapper)
 
-		assert(result)
+		assert(!result){"Should be false"}
 	}
 }
